@@ -1,14 +1,15 @@
-import { GetProducts } from "./domain.js";
+import { GetProductsInCart } from "./domain.js";
 
-const LoadProducts=() => 
+
+const LoadProductsInCart=() => 
 {
-    const ListOfProducts = GetProducts();
-    const container = document.getElementById("Product-Container");
+    const productsInCart = GetProductsInCart();
+    const container = document.getElementById("Checkout-Container");
     container.replaceChildren();
-    ListOfProducts.forEach(product => {
+
+    productsInCart.forEach(product => {
         const cardDiv = document.createElement("div");
         cardDiv.className = "product";
-        cardDiv.draggable = true;
 
         const title = document.createElement("h2");
         title.textContent = product.title;
@@ -19,11 +20,11 @@ const LoadProducts=() =>
         cardDiv.appendChild(description);
 
         const price = document.createElement("p");
-        price.textContent = product.price;
+        price.textContent = `Price: $${product.price}`
         cardDiv.appendChild(price);
 
         const quantity = document.createElement("p");
-        quantity.textContent = product.quantity;
+        quantity.textContent = `Quantity ${product.quantity}`;
         cardDiv.appendChild(quantity);
 
         const image = document.createElement("img");
@@ -33,4 +34,7 @@ const LoadProducts=() =>
         container.appendChild(cardDiv);
     });
 }
-LoadProducts();
+const LoadTotal = () =>{
+
+}
+LoadProductsInCart();

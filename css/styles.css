@@ -1,0 +1,42 @@
+#Product-Container {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  grid-area: products;
+  min-width: fit-content;
+}
+#cart {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  grid-area: cart;
+  min-width: fit-content;
+  border-left: 10px solid rgb(68, 67, 67);
+}
+#AdminAccess {
+  grid-area: adminAccess;
+}
+body {
+  grid-template-columns: 50%;
+  grid-template-rows: 100%;
+  max-height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "products cart"
+    "adminAccess adminAccess";
+}
+.product {
+  border: 1px solid black;
+  height: 20%;
+  img {
+    border: 10px solid black;
+    max-width: 200px;
+  }
+  height: fit-content;
+}
+
+.hoverclass {
+  background: rgb(65, 69, 65);
+}
