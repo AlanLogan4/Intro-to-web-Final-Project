@@ -1,4 +1,4 @@
-import { AddProductToCart, GetProducts, GetProductsInCart } from "./domain.js";
+import { AddProductToCart, GetProducts, GetProductsInCart, RemoveProductFromCart } from "./domain.js";
 
 const LoadProducts = () => {
   const ListOfProducts = GetProducts();
@@ -25,8 +25,11 @@ const LoadProducts = () => {
   container.addEventListener("drop", (event) => {
     const productTitle = event.dataTransfer.getData("text/plain");
     console.log(productTitle);
+    RemoveProductFromCart(productTitle);
+    LoadCart();
   });
 };
+
 const LoadCart = () => {
   const ListOfProducts = GetProductsInCart();
   const container = document.getElementById("cart");
@@ -51,7 +54,6 @@ const LoadCart = () => {
   container.addEventListener("dragleave", (event) => {
     //console.log("you have left");
     container.classList.remove("hoverclass");
-
   });
   container.addEventListener("dragover", (event) => {
     event.preventDefault();
@@ -64,10 +66,16 @@ const LoadCart = () => {
     container.replaceChildren();
     AddProductToCart(productTitle);
 
+    const cart = document.createElement("h1");
+    cart.textContent = "Cart";
+    container.appendChild(cart);
+
     const ListOfProducts = GetProductsInCart();
+    console.log(ListOfProducts);
     ListOfProducts.forEach((product) => {
       if (product.quantity === 0) {
       } else {
+        console.log(product.quantity);
         const cardDiv = CreateProductCard(product);
         container.appendChild(cardDiv);
       }

@@ -1,3 +1,5 @@
+import { GetAccess, SetAccess, GetItemsInCart, UpdateCart, UpdateProducts } from "./service.js";
+
 var products = [
   {
     title: "Water Bottle",
@@ -70,35 +72,21 @@ var products = [
     image: "/images/yerba.jpg",
   },
 ];
-var productsInCart = [
-  {
-    title: "Water Bottle",
-    description: "A 500ml reusable water bottle.",
-    price: 10.99,
-    quantity: 1,
-    image: "/images/waterbottle.jpg",
-  },
-  {
-    title: "Toothbrush",
-    description: "A standard toothbrush with soft bristles.",
-    price: 2.49,
-    quantity: 1,
-    image: "/images/toothbrush.jpg",
-  },
-];
-var adminAccess;
+var productsInCart = [];
+
 export const CheckAccess = (username, password) => {
   const correctUsername = "123";
   const correctPassword = "1234";
   if (username === correctUsername && password === correctPassword) {
-    adminAccess = true;
-    console.log(adminAccess);
+    SetAccess(true);
+
     return true;
   } else {
-    adminAccess = false;
-    console.log(adminAccess);
     return false;
   }
+};
+export const LogOut = () => {
+  SetAccess(false);
 };
 
 const GetProduct = (titleOfWantedProduct) => {
@@ -110,21 +98,57 @@ const GetProduct = (titleOfWantedProduct) => {
 
 export const AddProductToCart = (titleOfProduct) => {
   const product = GetProduct(titleOfProduct);
+
   if (productsInCart.includes(product)) {
     const index = productsInCart.indexOf(product);
     productsInCart[index].quantity += 1;
   } else {
+    product.quantity = 1;
     const newListOfProductsInCart = [...productsInCart, product];
     productsInCart = [...new Set(newListOfProductsInCart)];
   }
+  UpdateCart(productsInCart);
+};
+
+export const RemoveProductFromCart = (productTitle) => {
+  const product = GetProduct(productTitle);
+  if (product.quantity > 1) {
+    const index = productsInCart.indexOf(product);
+    productsInCart[index].quantity -= 1;
+  } else {
+    productsInCart = productsInCart.filter((productInCart) => {
+      return product.title !== productInCart.title;
+    });
+    console.log(productsInCart);
+  }
+  UpdateCart(productsInCart);
 };
 
 export const GetCurrentAccess = () => {
-  return adminAccess;
+  return GetAccess();
 };
 export const GetProducts = () => {
   return [...products];
 };
 export const GetProductsInCart = () => {
-  return [...productsInCart];
+  return GetItemsInCart();
 };
+
+export const RestockProduct = (product) =>
+{
+  const index = products.indexOf(product);
+  products[index].quantity += 1;
+  UpdateProducts(products);
+}
+
+export const GetTotalPrice = () => 
+{
+  var totalPrice;
+  const itemsInCart = GetItemsInCart();
+  itemsInCart.forEach(product => {
+    totalPrice += product.price
+    console.log(product.price)
+  });
+  console.log(totalPrice);
+  return totalPrice;
+}

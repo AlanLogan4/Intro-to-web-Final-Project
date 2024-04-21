@@ -1,54 +1,102 @@
-import { CheckAccess, GetCurrentAccess } from "./domain.js";
+import { CheckAccess, GetCurrentAccess, GetProducts, LogOut, RestockProduct } from "./domain.js";
 
 const LoadLogIn = () => {
-  const container = document.getElementById("login-form");
+  const container = document.getElementById("container");
   container.replaceChildren();
+
+  const form = document.createElement("form");
 
   const usernameLabel = document.createElement("label");
   usernameLabel.textContent = "Username";
-  container.appendChild(usernameLabel);
+  form.appendChild(usernameLabel);
 
   const usernameInput = document.createElement("input");
   usernameInput.type = "text";
-  container.appendChild(usernameInput);
+  form.appendChild(usernameInput);
 
   const passwordLabel = document.createElement("label");
   passwordLabel.textContent = "Password";
-  container.appendChild(passwordLabel);
+  form.appendChild(passwordLabel);
 
   const passwordInput = document.createElement("input");
   passwordInput.type = "text";
-  container.appendChild(passwordInput);
+  form.appendChild(passwordInput);
 
   const submitButton = document.createElement("input");
   submitButton.type = "submit";
   submitButton.id = "submit-button";
-  container.appendChild(submitButton);
+  form.appendChild(submitButton);
   submitButton.addEventListener("click", (event) => {
     event.preventDefault();
     if (CheckAccess(usernameInput.value, passwordInput.value)) {
       const container = document.getElementById("login-form");
-      container.hidden = true;
+      console.log(container)
+      form.hidden = true;
       console.log(GetCurrentAccess());
       LoadReStock();
     } else {
       console.log("no");
     }
   });
+  container.appendChild(form);
 };
 const LoadReStock = () => {
   const container = document.getElementById("container");
   container.replaceChildren();
-  const title = document.createElement("h1");
-  title.textContent = "Hello, World!";
-  container.appendChild(title);
+
+  const products = GetProducts();
+  products.forEach(product => {
+    const cardDiv = CreateProductCard(product);
+    container.appendChild(cardDiv);
+  });
+  const logOut = document.createElement("button")
+  logOut.textContent = "Log Out"
+  logOut.addEventListener("click", (event)=>{
+    event.preventDefault();
+    LogOut();
+    container.replaceChildren();
+    LoadLogIn();
+    
+  })
+  container.appendChild(logOut);
 };
-const access = GetCurrentAccess();
+
+const CreateProductCard = (product) =>
+{
+  const productDiv = document.createElement("div");
+  productDiv.classList.add("product")
+
+  const title = document.createElement("h2");
+  title.textContent = product.title;
+  productDiv.appendChild(title);
+
+  const image = document.createElement("img");
+  image.src = product.image;
+  productDiv.appendChild(image);
+
+  const amountLeft = document.createElement("h4");
+  amountLeft.classList.add("amount")
+  amountLeft.textContent = `Left in Stock: ${product.quantity}`;
+  productDiv.appendChild(amountLeft);
+
+  const reStockButton = document.createElement("button");
+  reStockButton.textContent = "restock";
+  reStockButton.addEventListener("click", (event)=>{
+    event.preventDefault()
+    RestockProduct(product);
+    LoadReStock();
+  })
+  productDiv.appendChild(reStockButton);
+
+  return productDiv
+}
+
 console.log(GetCurrentAccess());
-if (access) {
+
+if (GetCurrentAccess()) {
   console.log(GetCurrentAccess());
   LoadReStock();
-} else if (!access) {
+} else if (!GetCurrentAccess()) {
   console.log(GetCurrentAccess());
   LoadLogIn();
 }

@@ -24,3 +24,15 @@ input{
   font-size: 30px;
 }
 
+.product {
+  border: 1px solid black;
+  height: 20%;
+  img {
+    border: 10px solid black;
+    max-width: 200px;
+  }
+  height: fit-content;
+  .amount{
+    font-size: 30px;
+  }
+}
