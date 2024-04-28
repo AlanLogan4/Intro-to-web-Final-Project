@@ -46,18 +46,17 @@ export const CreatePurchaseOnApi = async (name, cardNumber, totalSpended) => {
     time: new Date(),
     name,
     cardNumber,
-    totalSpend: totalSpended,
+    totalSpended,
   };
   console.log(newPurchase);
 
-  await fetch(url, {});
-  // await fetch(url, {
-  //   method: "POST",
-  //   body: JSON.stringify(newPurchase),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+  await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(newPurchase),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
 
 export const LoadPurchasesFromApi = async() =>{

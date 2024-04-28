@@ -18,12 +18,13 @@ const LoadCheckOut = () => {
   buyButton.value = "Buy";
   buyButton.href = "index.hmtl";
   buyButton.addEventListener("click", async (event) => {
+    event.preventDefault();
     const listOfInputs = customerInfo.getElementsByTagName("input");
     console.log(listOfInputs);
     await CreatePurchaseOnApi(
       listOfInputs[0].value,
       listOfInputs[1].value,
-      totalPrice
+      GetTotalPrice(),
     );
     alert("thanks you for your purchase");
     Buy();
