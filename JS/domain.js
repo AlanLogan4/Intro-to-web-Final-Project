@@ -1,82 +1,32 @@
-import { GetAccess, SetAccess, GetItemsInCart, UpdateCart, UpdateProducts } from "./service.js";
+import {
+  GetAccess,
+  SetAccess,
+  GetItemsInCart,
+  UpdateCart,
+  UpdateProducts,
+  GetProductsInStock,
+  ClearEverything,
+  LoadPurchasesFromApi,
+  ResetCart,
+} from "./service.js";
 
-var products = [
-  {
-    title: "Water Bottle",
-    description: "A 500ml reusable water bottle.",
-    price: 10.99,
-    quantity: 3,
-    image: "/images/waterbottle.jpg",
-  },
-  {
-    title: "Toothbrush",
-    description: "A standard toothbrush with soft bristles.",
-    price: 2.49,
-    quantity: 2,
-    image: "/images/toothbrush.jpg",
-  },
-  {
-    title: "White T-shirt",
-    description: "A plain white tee made from cotton.",
-    price: 14.5,
-    quantity: 5,
-    image: "/images/tshirt.jpg",
-  },
-  {
-    title: "Leather Wallet",
-    description: "A classic wallet made from genuine leather.",
-    price: 20.0,
-    quantity: 4,
-    image: "/images/wallet.jpg",
-  },
-  {
-    title: "Soap Bar",
-    description: "A fragrant soap bar for daily use.",
-    price: 3.75,
-    quantity: 1,
-    image: "/images/soap.jpg",
-  },
-  {
-    title: "Notebook",
-    description: "A standard notebook for writing and note-taking.",
-    price: 6.99,
-    quantity: 3,
-    image: "/images/notebook.jpg",
-  },
-  {
-    title: "Lantern",
-    description: "A portable lantern suitable for indoor and outdoor use.",
-    price: 18.49,
-    quantity: 2,
-    image: "/images/lantern.jpg",
-  },
-  {
-    title: "Shopping Bag",
-    description: "A reusable shopping bag in a neutral color.",
-    price: 2.5,
-    quantity: 5,
-    image: "/images/shopping-bag.jpg",
-  },
-  {
-    title: "Straw Set",
-    description: "A set of 4 drinking straws with a cleaning brush.",
-    price: 7.99,
-    quantity: 4,
-    image: "/images/straws.jpg",
-  },
-  {
-    title: "Yerba Maté ",
-    description: "A 1kg bag of Yerba Maté.",
-    price: 12.25,
-    quantity: 2,
-    image: "/images/yerba.jpg",
-  },
-];
-var productsInCart = [];
+var taglist = ["drink", "hygiene", "dental"];
+var products = GetProductsInStock();
+var productsInCart = GetItemsInCart();
+
+//export const GetCartList = () => {
+//return [...productsInCart];
+//};
+//export const GetProductList = () => {
+//return [...products];
+//};
+export const GetTagList = () => {
+  return [...taglist];
+};
 
 export const CheckAccess = (username, password) => {
-  const correctUsername = "123";
-  const correctPassword = "1234";
+  const correctUsername = "administrator";
+  const correctPassword = "1234567";
   if (username === correctUsername && password === correctPassword) {
     SetAccess(true);
 
@@ -96,59 +46,108 @@ const GetProduct = (titleOfWantedProduct) => {
   return product;
 };
 
-export const AddProductToCart = (titleOfProduct) => {
-  const product = GetProduct(titleOfProduct);
+const GetProductInCart = (titleOfWantedProduct) => {
+  const product = productsInCart.filter(
+    (product) => product.title === titleOfWantedProduct
+  )[0];
+  return product;
+};
 
-  if (productsInCart.includes(product)) {
-    const index = productsInCart.indexOf(product);
+export const AddProductToCart = (titleOfProduct) => {
+  const product = { ...GetProduct(titleOfProduct) };
+  const productInCart = GetProductInCart(titleOfProduct);
+  if (product.quantity === 0) {
+    alert(`Sorry but we are out of ${product.title}`);
+    return;
+  }
+
+  if (productsInCart.includes(productInCart)) {
+    const index = productsInCart.indexOf(productInCart);
     productsInCart[index].quantity += 1;
-  } else {
+  } else if (!productsInCart.includes(productInCart)) {
     product.quantity = 1;
     const newListOfProductsInCart = [...productsInCart, product];
     productsInCart = [...new Set(newListOfProductsInCart)];
+  } else {
   }
+  const index = products.indexOf(GetProduct(titleOfProduct));
+  products[index].quantity -= 1;
   UpdateCart(productsInCart);
+  UpdateProducts(products);
 };
 
 export const RemoveProductFromCart = (productTitle) => {
-  const product = GetProduct(productTitle);
+  const productInStock = GetProduct(productTitle);
+  const product = GetProductInCart(productTitle);
+
+  console.log(productsInCart);
+  console.log(product);
+  console.log(product.quantity);
+
   if (product.quantity > 1) {
+    console.log("minus 1");
     const index = productsInCart.indexOf(product);
+    console.log(index);
+    console.log(productsInCart[index]);
     productsInCart[index].quantity -= 1;
-  } else {
+  } else if (product.quantity === 1) {
+    console.log("detele all");
     productsInCart = productsInCart.filter((productInCart) => {
-      return product.title !== productInCart.title;
+      return productInCart.title !== productTitle;
     });
-    console.log(productsInCart);
   }
+  const index = products.indexOf(productInStock);
+  products[index].quantity += 1;
+  console.log(productsInCart);
   UpdateCart(productsInCart);
+  UpdateProducts(products);
 };
 
 export const GetCurrentAccess = () => {
   return GetAccess();
 };
 export const GetProducts = () => {
-  return [...products];
+  return GetProductsInStock();
 };
 export const GetProductsInCart = () => {
   return GetItemsInCart();
 };
 
-export const RestockProduct = (product) =>
-{
-  const index = products.indexOf(product);
+export const GetPurchaseList = async () => {
+  return await LoadPurchasesFromApi();
+};
+
+export const RestockProduct = (product) => {
+  console.log(product);
+  console.log(products[0]);
+  const index = products.indexOf(GetProduct(product));
+  console.log(index);
   products[index].quantity += 1;
   UpdateProducts(products);
-}
+};
 
-export const GetTotalPrice = () => 
-{
-  var totalPrice;
+export const GetTotalPrice = () => {
+  var totalPrice = 0;
   const itemsInCart = GetItemsInCart();
-  itemsInCart.forEach(product => {
-    totalPrice += product.price
-    console.log(product.price)
+  itemsInCart.forEach((product) => {
+    totalPrice += product.price * product.quantity;
+    console.log(product.price);
   });
-  console.log(totalPrice);
-  return totalPrice;
-}
+  console.log(totalPrice.toFixed(2));
+  return totalPrice.toFixed(2);
+};
+
+export const GetFilteredProducts = (filterTitle) => {
+  const listOfProducts = GetProducts();
+  const filteredList = listOfProducts.filter((product) => {
+    return product.title
+      .toLocaleLowerCase()
+      .includes(filterTitle.toLocaleLowerCase());
+  });
+  return filteredList;
+};
+
+export const Buy = () => {
+  ResetCart();
+  productsInCart = GetItemsInCart();
+};

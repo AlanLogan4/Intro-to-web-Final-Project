@@ -1,7 +1,13 @@
-import { AddProductToCart, GetProducts, GetProductsInCart, RemoveProductFromCart } from "./domain.js";
+import {
+  AddProductToCart,
+  GetFilteredProducts,
+  GetProducts,
+  GetProductsInCart,
+  GetTagList,
+  RemoveProductFromCart,
+} from "./domain.js";
 
-const LoadProducts = () => {
-  const ListOfProducts = GetProducts();
+const LoadProducts = (ListOfProducts) => {
   const container = document.getElementById("Product-Container");
   container.replaceChildren();
 
@@ -26,6 +32,19 @@ const LoadProducts = () => {
     const productTitle = event.dataTransfer.getData("text/plain");
     console.log(productTitle);
     RemoveProductFromCart(productTitle);
+    event.stopImmediatePropagation();
+
+    var ListOfProducts = GetProducts();
+    container.replaceChildren();
+    const inStock = document.createElement("h1");
+    inStock.textContent = "In Stock";
+    container.appendChild(inStock);
+
+    ListOfProducts.forEach((product) => {
+      const cardDiv = CreateProductCard(product);
+      container.appendChild(cardDiv);
+    });
+
     LoadCart();
   });
 };
@@ -59,9 +78,10 @@ const LoadCart = () => {
     event.preventDefault();
   });
   container.addEventListener("drop", (event) => {
+    event.preventDefault();
     container.classList.remove("hoverclass");
-
     const productTitle = event.dataTransfer.getData("text/plain");
+    event.stopImmediatePropagation();
     console.log(productTitle);
     container.replaceChildren();
     AddProductToCart(productTitle);
@@ -71,15 +91,15 @@ const LoadCart = () => {
     container.appendChild(cart);
 
     const ListOfProducts = GetProductsInCart();
-    console.log(ListOfProducts);
+
     ListOfProducts.forEach((product) => {
-      if (product.quantity === 0) {
-      } else {
-        console.log(product.quantity);
+      if (product.quantity !== 0) {
         const cardDiv = CreateProductCard(product);
         container.appendChild(cardDiv);
+      } else {
       }
     });
+    LoadProducts(GetProducts());
   });
 };
 
@@ -116,5 +136,22 @@ const CreateProductCard = (product) => {
   return cardDiv;
 };
 
-LoadProducts();
+const SetFilter = () => {
+  const container = document.getElementById("filter");
+  container.replaceChildren();
+  const filterLabel = document.createElement("label");
+  filterLabel.textContent = "Search:"
+  const filterInput = document.createElement("input");
+  filterInput.addEventListener("input",(event)=>{
+    const filteredList = GetFilteredProducts(event.target.value);
+    LoadProducts(filteredList);
+  });
+  container.appendChild(filterLabel);
+  container.appendChild(filterInput);
+};
+
+
+
+SetFilter();
+LoadProducts(GetProducts());
 LoadCart();
