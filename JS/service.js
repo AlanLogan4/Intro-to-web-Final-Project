@@ -9,6 +9,10 @@ export const SetAccess = (access) => {
 };
 export const GetAccess = () => {
   const storedAccess = localStorage.getItem(accessKey);
+  if(!storedAccess)
+  {
+    return false;
+  }
   return JSON.parse(storedAccess);
 };
 
@@ -29,6 +33,10 @@ export const UpdateProducts = (products) => {
 
 export const GetProductsInStock = () => {
   const products = localStorage.getItem(productsKey);
+  if(!products)
+  {
+    return [];
+  }
   return JSON.parse(products);
 };
 
