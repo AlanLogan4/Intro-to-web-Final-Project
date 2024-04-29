@@ -1,5 +1,12 @@
-body{
+body {
   font-size: 40px;
+  background-color: rgb(58, 58, 77);
+}
+a {
+  button {
+    background-color: black;
+    color: white;
+  }
 }
 form {
   border: 1px solid black;
@@ -7,26 +14,31 @@ form {
   margin: auto;
   margin-top: 80px;
   background-color: rgb(149, 149, 182);
+  h2 {
+    margin: 10px;
+  }
 }
-label{
-    margin-left: 10px;
-    margin-top: 30px;
-    display: block;
+label {
+  margin-left: 10px;
+  margin-top: 30px;
+  display: block;
 }
-input{
+input {
   background-color: rgb(192, 192, 198);
-    justify-items: center;
-    margin-left: 10px;
-    display: block;
-    margin-bottom: 10px;
-    font-size: 40px;
+  justify-items: center;
+  margin-left: 10px;
+  display: block;
+  margin-bottom: 10px;
+  font-size: 40px;
 }
-#submit-button{
+#submit-button {
   margin-top: 40px;
   font-size: 30px;
 }
 
 .product {
+  padding: 10px;
+  background-color: rgb(151, 151, 189);
   border: 1px solid black;
   height: 20%;
   img {
@@ -34,14 +46,40 @@ input{
     max-width: 200px;
   }
   height: fit-content;
-  .amount{
+  .amount {
     font-size: 30px;
+  }
+  button{
+    height: 70px;
+    font-size: 40px;
+    transition: all 1s;
+  }
+  button:hover{
+    background-color: rgb(159, 159, 159);
   }
 }
 
-.pruchaseCard{
+.pruchaseCard {
+  
   border: solid black 1px;
+  background-color: rgb(151, 151, 189);
 }
-#navigation{
-
+#navigation {
+  background-color: rgb(151, 151, 189);
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-around;
+  button{
+    margin: 10px;
+    height: 50px;
+    width: 200px;
+    font-size: 20px;
+    transition: all 1s;
+  }
+  button:hover{
+    background-color: rgb(119, 119, 152);
+  }
 }

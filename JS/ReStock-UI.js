@@ -5,13 +5,17 @@ import {
   GetPurchaseList,
   LogOut,
   RestockProduct,
-} from "./domain.js";
+} from "../JS/domain.js";
 
 const LoadLogIn = () => {
   const container = document.getElementById("container");
   container.replaceChildren();
 
   const form = document.createElement("form");
+
+  const title = document.createElement("h2");
+  title.textContent = "Admin Log In";
+  form.appendChild(title);
 
   const usernameLabel = document.createElement("label");
   usernameLabel.textContent = "Username";
@@ -44,7 +48,7 @@ const LoadLogIn = () => {
       LoadNavigation();
     } else {
       console.log("no");
-      alert("Wrong Password/username")
+      alert("Wrong Password/username");
     }
   });
   container.appendChild(form);
@@ -52,18 +56,6 @@ const LoadLogIn = () => {
 const LoadSite = () => {
   const container = document.getElementById("container");
   container.replaceChildren();
-
-  const logOut = document.createElement("button");
-  logOut.textContent = "Log Out";
-  logOut.addEventListener("click", (event) => {
-    event.preventDefault();
-    const navigationBar = document.getElementById("navigation");
-    navigationBar.hidden = true;
-    LogOut();
-    container.replaceChildren();
-    LoadLogIn();
-  });
-  container.appendChild(logOut);
 };
 
 const CreateProductCard = (product) => {
@@ -104,17 +96,7 @@ const LoadPurchaseHistory = async () => {
     const pruchaseDiv = CreatePurchaseCard(purchase);
     container.appendChild(pruchaseDiv);
   });
-  const logOut = document.createElement("button");
-  logOut.textContent = "Log Out";
-  logOut.addEventListener("click", (event) => {
-    event.preventDefault();
-    const navigationBar = document.getElementById("navigation");
-    navigationBar.hidden = true;
-    LogOut();
-    container.replaceChildren();
-    LoadLogIn();
-  });
-  container.appendChild(logOut);
+
 };
 
 const CreatePurchaseCard = (purchase) => {
@@ -122,7 +104,9 @@ const CreatePurchaseCard = (purchase) => {
   pruchaseDiv.classList.add("pruchaseCard");
 
   const time = document.createElement("p");
-  time.textContent = `Date: ${purchase.time}`;
+  const s = new Date(purchase.time);
+  console.log(s);
+  time.textContent = `Date: ${s}`;
   pruchaseDiv.appendChild(time);
 
   const name = document.createElement("p");
@@ -144,23 +128,12 @@ const LoadReStock = () => {
     const cardDiv = CreateProductCard(product);
     container.appendChild(cardDiv);
   });
-  const logOut = document.createElement("button");
-  logOut.textContent = "Log Out";
-  logOut.addEventListener("click", (event) => {
-    event.preventDefault();
-    const navigationBar = document.getElementById("navigation");
-    navigationBar.hidden = true;
-    LogOut();
-    container.replaceChildren();
-    LoadLogIn();
-  });
-  container.appendChild(logOut);
 };
 
 const LoadNavigation = () => {
   const container = document.getElementById("navigation");
   const reStockButton = document.createElement("button");
-  reStockButton.textContent = "reStock";
+  reStockButton.textContent = "ReStock";
   reStockButton.addEventListener("click", (event) => {
     event.preventDefault();
     LoadSite();
@@ -174,9 +147,20 @@ const LoadNavigation = () => {
     LoadSite();
     LoadPurchaseHistory();
   });
+  const logOut = document.createElement("button");
+  logOut.textContent = "Log Out";
+  logOut.addEventListener("click", (event) => {
+    event.preventDefault();
+    const navigationBar = document.getElementById("navigation");
 
-  container.appendChild(historyPurchase);
+    LogOut();
+    container.replaceChildren();
+    LoadLogIn();
+  });
+
   container.appendChild(reStockButton);
+  container.appendChild(historyPurchase);
+  container.appendChild(logOut);
 };
 
 console.log(GetCurrentAccess());

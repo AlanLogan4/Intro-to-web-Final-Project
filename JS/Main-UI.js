@@ -10,43 +10,53 @@ import {
 const LoadProducts = (ListOfProducts) => {
   const container = document.getElementById("Product-Container");
   container.replaceChildren();
-
+  
   const inStock = document.createElement("h1");
   inStock.textContent = "In Stock";
   container.appendChild(inStock);
 
-  ListOfProducts.forEach((product) => {
-    const cardDiv = CreateProductCard(product);
-    container.appendChild(cardDiv);
-  });
-  container.addEventListener("dragenter", (event) => {
-    //console.log("you have enter");
-  });
-  container.addEventListener("dragleave", (event) => {
-    //console.log("you have left");
-  });
-  container.addEventListener("dragover", (event) => {
-    event.preventDefault();
-  });
-  container.addEventListener("drop", (event) => {
-    const productTitle = event.dataTransfer.getData("text/plain");
-    console.log(productTitle);
-    RemoveProductFromCart(productTitle);
-    event.stopImmediatePropagation();
-
-    var ListOfProducts = GetProducts();
-    container.replaceChildren();
-    const inStock = document.createElement("h1");
-    inStock.textContent = "In Stock";
-    container.appendChild(inStock);
-
+  if (ListOfProducts.length === 0) {
+    const noProducts = document.createElement("h1");
+    noProducts.textContent = "No products Found";
+    container.appendChild(noProducts);
+  } else {
     ListOfProducts.forEach((product) => {
       const cardDiv = CreateProductCard(product);
       container.appendChild(cardDiv);
     });
+    container.addEventListener("dragenter", (event) => {
+    container.classList.add("hoverclass");
+      //console.log("you have enter");
+    });
+    container.addEventListener("dragleave", (event) => {
+    container.classList.remove("hoverclass");
+      //console.log("you have left");
+    });
+    container.addEventListener("dragover", (event) => {
+      event.preventDefault();
+    });
+    container.addEventListener("drop", (event) => {
+    container.classList.remove("hoverclass");
+      
+      const productTitle = event.dataTransfer.getData("text/plain");
+      console.log(productTitle);
+      RemoveProductFromCart(productTitle);
+      event.stopImmediatePropagation();
 
-    LoadCart();
-  });
+      var ListOfProducts = GetProducts();
+      container.replaceChildren();
+      const inStock = document.createElement("h1");
+      inStock.textContent = "In Stock";
+      container.appendChild(inStock);
+
+      ListOfProducts.forEach((product) => {
+        const cardDiv = CreateProductCard(product);
+        container.appendChild(cardDiv);
+      });
+
+      LoadCart();
+    });
+  }
 };
 
 const LoadCart = () => {
@@ -127,7 +137,8 @@ const CreateProductCard = (product) => {
   cardDiv.appendChild(quantity);
 
   const image = document.createElement("img");
-  image.src = product.image;
+  image.src = `${product.image}`;
+  console.log(product.image)
   cardDiv.appendChild(image);
 
   cardDiv.addEventListener("dragstart", (event) => {
@@ -140,17 +151,15 @@ const SetFilter = () => {
   const container = document.getElementById("filter");
   container.replaceChildren();
   const filterLabel = document.createElement("label");
-  filterLabel.textContent = "Search:"
+  filterLabel.textContent = "Search:";
   const filterInput = document.createElement("input");
-  filterInput.addEventListener("input",(event)=>{
+  filterInput.addEventListener("input", (event) => {
     const filteredList = GetFilteredProducts(event.target.value);
     LoadProducts(filteredList);
   });
   container.appendChild(filterLabel);
   container.appendChild(filterInput);
 };
-
-
 
 SetFilter();
 LoadProducts(GetProducts());

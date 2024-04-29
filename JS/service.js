@@ -41,12 +41,12 @@ export const ResetCart = () =>{
   localStorage.removeItem(cartKey);
 }
 
-export const CreatePurchaseOnApi = async (name, cardNumber, totalSpended) => {
+export const CreatePurchaseOnApi = async (name, cardNumber, moneyspended) => {
   const newPurchase = {
     time: new Date(),
     name,
     cardNumber,
-    totalSpended,
+    totalSpend: moneyspended,
   };
   console.log(newPurchase);
 

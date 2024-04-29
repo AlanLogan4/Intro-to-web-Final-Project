@@ -17,20 +17,26 @@ const LoadCheckOut = () => {
   buyButton.type = "submit";
   buyButton.value = "Buy";
   buyButton.href = "index.hmtl";
-  buyButton.addEventListener("click", async (event) => {
-    event.preventDefault();
+  buyButton.addEventListener("click", (event) => {
+    if (GetProductsInCart().length === 0) {
+      alert("sorry but your cart is empty");
+    }else {}
+  });
+  container.appendChild(buyButton);
+
+  container.addEventListener("submit", async (event) => {
     const listOfInputs = customerInfo.getElementsByTagName("input");
     console.log(listOfInputs);
+    console.log(GetTotalPrice());
     await CreatePurchaseOnApi(
       listOfInputs[0].value,
       listOfInputs[1].value,
-      GetTotalPrice(),
+      GetTotalPrice()
     );
+    document.location.href = "/html/index.html";
     alert("thanks you for your purchase");
     Buy();
-    document.location.href = "index.html";
   });
-  container.appendChild(buyButton);
 };
 
 const CustomerInformation = () => {
@@ -49,8 +55,8 @@ const CustomerInformation = () => {
   cardInfoDiv.appendChild(cardNumberLabel);
   const cardNumberInput = document.createElement("input");
   cardNumberInput.type = "Number";
-  cardNumberInput.min = 12;
-  cardNameInput.setAttribute.required = true;
+  cardNumberInput.required = true;
+
   cardInfoDiv.appendChild(cardNumberInput);
 
   const expirationDateLabel = document.createElement("label");
@@ -58,7 +64,7 @@ const CustomerInformation = () => {
   cardInfoDiv.appendChild(expirationDateLabel);
   const expirationDateInput = document.createElement("input");
   expirationDateInput.type = "date";
-  expirationDateInput.setAttribute.required = true;
+  expirationDateInput.required = true;
   cardInfoDiv.appendChild(expirationDateInput);
 
   const cvvLabel = document.createElement("label");
@@ -66,7 +72,7 @@ const CustomerInformation = () => {
   cardInfoDiv.appendChild(cvvLabel);
   const cvvInput = document.createElement("input");
   cvvInput.type = "Number";
-  cvvInput.setAttribute.required = true;
+  cvvInput.required = true;
   cardInfoDiv.appendChild(cvvInput);
 
   return cardInfoDiv;
@@ -153,6 +159,10 @@ const LoadProductsInCart = () => {
   const productsInCart = GetProductsInCart();
   const container = document.getElementById("cart-items");
   container.replaceChildren();
+
+  const title = document.createElement("h3");
+  title.textContent = "Cart";
+  container.appendChild(title);
 
   productsInCart.forEach((product) => {
     const cardDiv = CreateProductCart(product);

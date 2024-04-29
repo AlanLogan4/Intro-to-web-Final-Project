@@ -137,6 +137,8 @@ export const GetTotalPrice = () => {
   return totalPrice.toFixed(2);
 };
 
+export const CheckInput = () =>{}
+
 export const GetFilteredProducts = (filterTitle) => {
   const listOfProducts = GetProducts();
   const filteredList = listOfProducts.filter((product) => {
@@ -151,3 +153,4 @@ export const Buy = () => {
   ResetCart();
   productsInCart = GetItemsInCart();
 };
+

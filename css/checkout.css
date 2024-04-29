@@ -17,6 +17,7 @@ form {
   width: 600px;
   margin: auto;
   margin-top: 80px;
+  color: rgb(1, 24, 1);
 }
 
 label {
@@ -30,10 +31,28 @@ input {
   display: block;
   margin-bottom: 10px;
   font-size: 40px;
+  background-color: rgb(143, 205, 143);
 }
 body{
   font-size: 40px;
+  background-color: rgb(61, 105, 61);
 }
 #cart-items{
   padding: 10px;
+}
+h2{
+  display:flex;
+  text-align: center;
+  justify-content: center;
+  color: rgb(5, 41, 5);
+}
+h3{
+  margin: 10px;
+}
+
+a{
+  button{
+    background-color: rgb(22, 37, 22);
+    color: white;
+  }
 }
