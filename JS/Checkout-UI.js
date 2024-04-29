@@ -16,7 +16,7 @@ const LoadCheckOut = () => {
   const buyButton = document.createElement("input");
   buyButton.type = "submit";
   buyButton.value = "Buy";
-  buyButton.href = "index.hmtl";
+  buyButton.href = "../html/index.hmtl";
   buyButton.addEventListener("click", (event) => {
     if (GetProductsInCart().length === 0) {
       alert("sorry but your cart is empty");
@@ -33,7 +33,7 @@ const LoadCheckOut = () => {
       listOfInputs[1].value,
       GetTotalPrice()
     );
-    document.location.href = "/html/index.html";
+    document.location.href = "../html/index.html";
     alert("thanks you for your purchase");
     Buy();
   });
