@@ -137,7 +137,7 @@ export const GetTotalPrice = () => {
   return totalPrice.toFixed(2);
 };
 
-export const CheckInput = () =>{}
+//export const CheckInput = () =>{}
 
 export const GetFilteredProducts = (filterTitle) => {
   const listOfProducts = GetProducts();
